@@ -46,13 +46,20 @@ export default function App() {
     }
 
     async function handleMovieAdded(newMovie) {
-        // refresh movies list
+        // called with the created movie from the AddMovieForm
+        if (!newMovie) return
+        // prepend to local state for immediate UI update
+        setMovies(prev => [newMovie, ...prev])
+    }
+
+    async function handleMovieUpdated(movieId, data) {
         try {
-            await axios.post(`${API_BASE}/movies`, newMovie)
+            // send lowercase or capitalized fields are both accepted by backend
+            await axios.put(`${API_BASE}/movies/${movieId}`, data)
             const res = await axios.get(`${API_BASE}/movies`)
             setMovies(res.data)
         } catch (err) {
-            console.error(err)
+            console.error('Failed to update movie', err)
         }
     }
 
@@ -124,7 +131,7 @@ export default function App() {
                     {loading && <div>Loading movies…</div>}
                     {error && <div className="error">Error: {error}</div>}
                     {!loading && !error && (
-                        <MoviesList movies={movies} selectedUser={selectedUser} onAddFavorite={handleAddFavorite} onDelete={handleDeleteMovie} />
+                        <MoviesList movies={movies} selectedUser={selectedUser} onAddFavorite={handleAddFavorite} onDelete={handleDeleteMovie} onUpdate={handleMovieUpdated} />
                     )}
                 </div>
 

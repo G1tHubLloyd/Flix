@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import MovieCard from './MovieCard'
 
-export default function MoviesList({ movies, selectedUser, onAddFavorite, onDelete }) {
+export default function MoviesList({ movies, selectedUser, onAddFavorite, onDelete, onUpdate }) {
     if (!movies || movies.length === 0) return <div>No movies found.</div>
 
     return (
         <div className="movies-grid">
             {movies.map((m) => (
-                <MovieCard key={m._id || m.id} movie={m} selectedUser={selectedUser} onAddFavorite={onAddFavorite} onDelete={onDelete} />
+                <MovieCard key={m._id || m.id} movie={m} selectedUser={selectedUser} onAddFavorite={onAddFavorite} onDelete={onDelete} onUpdate={onUpdate} />
             ))}
         </div>
     )

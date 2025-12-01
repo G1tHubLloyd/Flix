@@ -22,15 +22,21 @@ router.get('/:id', (req, res) => {
 
 // POST /movies - create a new movie (public)
 router.post('/', (req, res) => {
-    const { title, description, director, genre } = req.body
-    if (!title) return res.status(400).json({ message: 'Title is required' })
+    // Accept either lowercase (`title`) or capitalized (`Title`) fields
+    const Title = req.body.Title || req.body.title
+    const Description = req.body.Description || req.body.description
+    const Director = req.body.Director || req.body.director
+    const Genre = req.body.Genre || req.body.genre
+
+    if (!Title) return res.status(400).json({ message: 'Title is required' })
     const maxId = sampleMovies.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0)
     const newMovie = {
         id: maxId + 1,
-        title,
-        description: description || '',
-        director: director || '',
-        genre: genre || null,
+        // store in-memory using lowercase keys for consistency with local sample data
+        title: Title,
+        description: Description || '',
+        director: Director || '',
+        genre: Genre || null,
     }
     sampleMovies.unshift(newMovie)
     res.status(201).json(newMovie)
@@ -41,8 +47,19 @@ router.put('/:id', (req, res) => {
     const id = req.params.id
     const idx = sampleMovies.findIndex(m => String(m.id) === String(id))
     if (idx === -1) return res.status(404).json({ message: 'Movie not found' })
-    const { title, description, director, genre } = req.body
-    const updated = Object.assign({}, sampleMovies[idx], { title, description, director, genre })
+    // Accept either lowercase or capitalized fields for updates
+    const Title = req.body.Title || req.body.title
+    const Description = req.body.Description || req.body.description
+    const Director = req.body.Director || req.body.director
+    const Genre = req.body.Genre || req.body.genre
+
+    const updated = Object.assign({}, sampleMovies[idx], {
+        // normalize to lowercase keys used in-memory
+        title: Title !== undefined ? Title : sampleMovies[idx].title,
+        description: Description !== undefined ? Description : sampleMovies[idx].description,
+        director: Director !== undefined ? Director : sampleMovies[idx].director,
+        genre: Genre !== undefined ? Genre : sampleMovies[idx].genre,
+    })
     sampleMovies[idx] = updated
     res.json(updated)
 })

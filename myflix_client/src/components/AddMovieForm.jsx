@@ -12,7 +12,8 @@ export default function AddMovieForm({ onMovieAdded }) {
         e.preventDefault()
         setStatus('loading')
         try {
-            const payload = { Title: title, Description: description, ImagePath: imagePath }
+            // send lowercase fields to match backend normalization
+            const payload = { title: title, description: description, imagePath: imagePath }
             const res = await axios.post(`${API_BASE}/movies`, payload)
             const data = res.data
             setStatus('created')
