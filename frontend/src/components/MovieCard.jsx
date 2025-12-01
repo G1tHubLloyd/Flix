@@ -4,17 +4,21 @@ import PropTypes from 'prop-types'
 export default function MovieCard({ movie }) {
     return (
         <article className="movie-card">
-            <h3>{movie.title}</h3>
-            {movie.description && <p>{movie.description}</p>}
-            {movie.genre && <p><strong>Genre:</strong> {movie.genre}</p>}
+            <h3>{movie.Title || movie.title}</h3>
+            {(movie.Description || movie.description) && (
+                <p>{movie.Description || movie.description}</p>
+            )}
+            {movie.Genre && <p><strong>Genre:</strong> {movie.Genre}</p>}
         </article>
     )
 }
 
 MovieCard.propTypes = {
     movie: PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        Title: PropTypes.string,
+        title: PropTypes.string,
+        Description: PropTypes.string,
         description: PropTypes.string,
-        genre: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+        Genre: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     }).isRequired,
 }
