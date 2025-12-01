@@ -22,6 +22,7 @@ npm install
 
 ```bash
 cd ../myflix_api/myflix_api
+Note: This small README change is to create a branch and pull request for the "Render Data in Your Components" task.
 npm run start
 ```
 
