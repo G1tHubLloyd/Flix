@@ -26,6 +26,39 @@ export default function App() {
         fetchMovies()
     }, [])
 
+    // CRUD helpers for movies
+    async function addMovie(payload) {
+        try {
+            const res = await api.post('/movies', payload)
+            setMovies((m) => [res.data, ...m])
+            return res.data
+        } catch (err) {
+            setError(err.message || 'Failed to add movie')
+            throw err
+        }
+    }
+
+    async function updateMovie(id, payload) {
+        try {
+            const res = await api.put(`/movies/${id}`, payload)
+            setMovies((list) => list.map((it) => (it.id === id ? res.data : it)))
+            return res.data
+        } catch (err) {
+            setError(err.message || 'Failed to update movie')
+            throw err
+        }
+    }
+
+    async function deleteMovie(id) {
+        try {
+            await api.delete(`/movies/${id}`)
+            setMovies((list) => list.filter((it) => it.id !== id))
+        } catch (err) {
+            setError(err.message || 'Failed to delete movie')
+            throw err
+        }
+    }
+
     return (
         <div className="app-container">
             <header>
@@ -39,9 +72,14 @@ export default function App() {
 
                 {view === 'movies' && (
                     <>
+                        <div style={{ marginBottom: 12 }}>
+                            <AddMovieForm onAdd={addMovie} />
+                        </div>
                         {loading && <p>Loading movies...</p>}
                         {error && <p style={{ color: 'red' }}>{error}</p>}
-                        {!loading && !error && <MoviesList movies={movies} />}
+                        {!loading && !error && (
+                            <MoviesList movies={movies} onUpdate={updateMovie} onDelete={deleteMovie} />
+                        )}
                     </>
                 )}
 

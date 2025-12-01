@@ -8,7 +8,7 @@ export default function MoviesList({ movies }) {
     return (
         <div className="movies-list">
             {movies.map((m) => (
-                <MovieCard key={m.id || m.title} movie={m} />
+                <MovieCard key={m.id || m.title} movie={{ ...m, __onUpdate: onUpdate, __onDelete: onDelete }} />
             ))}
         </div>
     )
