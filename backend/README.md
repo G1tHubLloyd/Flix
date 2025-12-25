@@ -27,3 +27,5 @@ Deploy to Heroku:
 # ensure main is up-to-date and merged
 git push heroku main
 ```
+
+Note: This small README change is to create a pull request for the `allow-movies-public` branch.
